@@ -1,3 +1,4 @@
 #!/bin/bash
-cd /usr/local/bin/mod_server
+#cd /usr/local/bin/mod_server
+cd $(dirname $0)/mod_server
 node mod_server.js
