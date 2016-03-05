@@ -88,18 +88,17 @@ public:
 
 	void quickTest();
 
-	int getSpoonLoad();
 	int getJointPosition(int id);
 	int getJointSpeed(int id);
 	int getJointLoad(int id);
 	int getJointTemperature(int id);
 	int isJointMoving(int id);
 
-	int sendPacket(int id, int Address, int value);
+	int sendPacket(int id, int address, int value);
 	int readPacket(unsigned char *buffer, size_t size);
 
-	int RXsendPacket(int id, int Address);
-	int RXsendPacket(int id, int Address, int size);
+	int RXsendPacket(int id, int address);
+	int RXsendPacket(int id, int address, int size);
 
 	int flush();
 

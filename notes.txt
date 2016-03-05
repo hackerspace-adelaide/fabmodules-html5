@@ -1,0 +1,98 @@
+setJointSpeed
+
+??            F5,FD,
+
+header        FF,FF,FD,0,
+id            1,
+length        4,0,
+status return 55,
+error (alert) 80,
+checksum      A2,8F,
+valid!
+
+LED
+
+F5,FE,FF,FF,FD,0,1,4,0,55,80,A2,8F,
+
+moveJoint
+
+AB,FE,FF,FF,FD,0,1,4,0,55,80,A2,8F,
+
+getJointPosition
+
+??            55,F1,
+header        FF,FF,FD,0,
+id            1,
+length        4,0,
+status        55,
+error alert   87,
+access error
+checksum      B3,F,
+valid!
+
+setJointSpeed
+
+F5,FD,FF,FF,FD,0,1,4,0,55,80,A2,8F,
+
+LED
+
+55,FE,FF,FF,FD,0,1,4,0,55,80,A2,8F,
+
+moveJoint
+
+55,C1,FF,FF,FD,0,1,4,0,55,80,A2,8F,
+
+getJointPosition
+
+
+built packet is not valid
+
+header: FF,FF,FD,0,
+id:     1,
+length: 7,0,
+instr:  3,
+params: 19,0,2,0,
+crc:    70,92
+
+
+
+moveJoint
+
+built packet is not valid
+
+header: FF,FF,FD,0,
+id:     1,
+length: 7,0,
+instr:  3,
+params: 
+address:1E,0,
+values: 20,3,
+crc:    7C,96
+
+
+
+LED
+built packet is not valid
+[FF,FF,FD,0,1,7,0,3,19,0,2,0,70,92]
+[FF,FF,FD,0,1,7,0,3,19,0,4,0,18,EB]
+[FF,FF,FD,0,1,7,0,3,19,0,1,0,C4,AE]
+[FF,FF,FD,0,1,7,0,3,19,0,2,0,70,92]
+[FF,FF,FD,0,1,7,0,3,19,0,4,0,18,EB]
+[FF,FF,FD,0,1,7,0,3,19,0,1,0,C4,AE]
+[FF,FF,FD,0,1,7,0,3,19,0,2,0,70,92]
+[FF,FF,FD,0,1,7,0,3,19,0,4,0,18,EB]
+[FF,FF,FD,0,1,7,0,3,19,0,1,0,C4,AE]
+[FF,FF,FD,0,1,7,0,3,19,0,2,0,70,92]
+[FF,FF,FD,0,1,7,0,3,19,0,4,0,18,EB]
+[FF,FF,FD,0,1,7,0,3,19,0,1,0,C4,AE]
+[FF,FF,FD,0,1,7,0,3,19,0,2,0,70,92]
+[FF,FF,FD,0,1,7,0,3,19,0,4,0,18,EB]
+??[FF,FF,FD,0,1,7,0,3,19,0,1,0,B,B6]
+[FF,FF,FD,0,1,7,0,3,19,0,2,0,70,92]
+[FF,FF,FD,0,1,7,0,3,19,0,4,0,18,EB]
+[FF,FF,FD,0,1,7,0,3,19,0,1,0,C4,AE]
+[FF,FF,FD,0,1,7,0,3,19,0,2,0,70,92]
+[FF,FF,FD,0,1,7,0,3,19,0,4,0,18,EB]
+[FF,FF,FD,0,1,7,0,3,19,0,1,0,C4,AE]
+[FF,FF,FD,0,1,7,0,3,19,0,2,0,70,92]
+[FF,FF,FD,0,1,7,0,3,19,0,4,0,18,EB]

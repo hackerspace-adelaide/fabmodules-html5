@@ -36,7 +36,6 @@
 
 
 XL320::XL320() {
-
 }
 
 XL320::~XL320() {
@@ -55,7 +54,6 @@ void XL320::moveJoint(int id, int value){
 	sendPacket(id, Address, value);
 	this->stream->flush();
 
-	nDelay(NANO_TIME_DELAY);
 }
 
 void XL320::setJointSpeed(int id, int value){
@@ -63,7 +61,6 @@ void XL320::setJointSpeed(int id, int value){
 	sendPacket(id, Address, value);
 	this->stream->flush();
 
-	nDelay(NANO_TIME_DELAY);
 
 }
 
@@ -105,16 +102,12 @@ void XL320::LED(int id, char led_color[]){
 	
 	sendPacket(id, Address, val);
 	this->stream->flush();
-	
-	nDelay(NANO_TIME_DELAY);
 }	
 
 void XL320::setJointTorque(int id, int value){
 	int Address = XL_GOAL_TORQUE;
 	sendPacket(id, Address, value);
 	this->stream->flush();
-	nDelay(NANO_TIME_DELAY);
-
 }
 
 void XL320::TorqueON(int id){
@@ -124,7 +117,6 @@ void XL320::TorqueON(int id){
 	
 	sendPacket(id, Address, value);
 	this->stream->flush();
-	nDelay(NANO_TIME_DELAY);
 }
 
 void XL320::TorqueOFF(int id){
@@ -134,7 +126,6 @@ void XL320::TorqueOFF(int id){
 	
 	sendPacket(id, Address, value);
 	this->stream->flush();
-	nDelay(NANO_TIME_DELAY);
 }
 
 
@@ -185,53 +176,25 @@ void XL320::quickTest(){
 	
 }
 
-int XL320::getSpoonLoad(){
-	int spoon = RXsendPacket(5, XL_PRESENT_LOAD);
-	this->stream->flush();
-	return spoon;
-}
 
 int XL320::getJointPosition(int id){
-    unsigned char buffer[255];
-    RXsendPacket(id, XL_PRESENT_POSITION, 2); 
-    this->stream->flush();
-    if(this->readPacket(buffer,255)>0) {
-      Packet p(buffer,255);
-      if(p.isValid() && p.getParameterCount()>=3) {
-	return (p.getParameter(1))|(p.getParameter(2)<<8);
-      } else {
-	return -1;
-      }
-    }
-    return -2;
+    return RXsendPacket(id, XL_PRESENT_POSITION, 2); 
 }
 
 int XL320::getJointSpeed(int id){
-    int speed = RXsendPacket(id, XL_PRESENT_SPEED); 
-    this->stream->flush();
-    nDelay(NANO_TIME_DELAY);
-    return speed;
+    return RXsendPacket(id, XL_PRESENT_SPEED, 2); 
 }
 
 int XL320::getJointLoad(int id){
-    int load = RXsendPacket(id, XL_PRESENT_LOAD); 
-    this->stream->flush();
-    nDelay(NANO_TIME_DELAY);
-    return load;
+    return RXsendPacket(id, XL_PRESENT_LOAD, 2); 
 }
 
 int XL320::getJointTemperature(int id){
-    int temp = RXsendPacket(id, XL_PRESENT_TEMPERATURE); 
-    this->stream->flush();
-    nDelay(NANO_TIME_DELAY);
-    return temp;
+    return RXsendPacket(id, XL_PRESENT_TEMPERATURE, 1); 
 }
 
 int XL320::isJointMoving(int id){
-    int motion = RXsendPacket(id, XL_MOVING);
-    this->stream->flush();
-    nDelay(NANO_TIME_DELAY);
-    return motion;
+    return RXsendPacket(id, XL_MOVING, 1);
 }
 
 int XL320::sendPacket(int id, int Address, int value){
@@ -286,22 +249,32 @@ int XL320::RXsendPacket(int id, int Address, int size){
 	  used by Dynamixel XL-320 and Dynamixel PRO only.
 	*/
 
-    const int bufsize = 16;
+    const int bufsize = 255;
 
-    byte txbuffer[bufsize];
+    byte buffer[bufsize];
 
-    Packet p(txbuffer,bufsize,id,0x02,4,
+    Packet p(buffer,bufsize,id,0x02,4,
 	DXL_LOBYTE(Address),
 	DXL_HIBYTE(Address),
 	DXL_LOBYTE(size),
 	DXL_HIBYTE(size));
 
+    stream->write(buffer,p.getSize());
+    this->stream->flush();
 
-    stream->write(txbuffer,p.getSize());
-
-    //stream->write(txbuffer,bufsize);
-
-    return p.getSize();	
+    int value = 0;
+    if(this->readPacket(buffer,255)>0) {
+      Packet p(buffer,255);
+      if(p.isValid() && p.getParameterCount()>=size+1) {
+        for(int i=0; i<size; i++) {
+            value |= (p.getParameter(i+1)&0xff)<<(8*i);
+        }
+        return value;
+      } else {
+	return -1;
+      }
+    }
+    return -2;
 }
 
 // from http://stackoverflow.com/a/133363/195061
@@ -389,7 +362,6 @@ XL320::Packet::Packet(
 	unsigned char instruction,
 	int parameter_data_size,
 	...) {
-
 
     // [ff][ff][fd][00][id][len1][len2] { [instr][params(parameter_data_size)][crc1][crc2] }
     unsigned int length=3+parameter_data_size;
