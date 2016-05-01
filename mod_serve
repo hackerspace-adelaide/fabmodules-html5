@@ -1,4 +1,4 @@
 #!/bin/bash
 #cd /usr/local/bin/mod_server
 cd $(dirname $0)/mod_server
-node mod_server.js
+PATH=$(PWD):$PATH node mod_server.js
